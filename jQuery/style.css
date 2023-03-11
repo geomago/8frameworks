@@ -1,0 +1,7 @@
+#productTable img {
+  max-width: 100px;
+}
+
+#editModal input, #editModal textarea {
+  width: 100%;
+}

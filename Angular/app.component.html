@@ -1,0 +1,44 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Thumbnail</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>{{product.id}}</td>
+      <td>{{product.title}}</td>
+      <td>{{product.description}}</td>
+      <td>{{product.price}}</td>
+      <td><img [src]="product.thumbnail" [style.width.px]="100"></td>
+      <td><button (click)="editProduct(product)">Edit</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="modal" [class.active]="modalActive">
+  <div class="modal-content" *ngIf="editedProduct">
+    <h2>Edit Product</h2>
+    <form>
+      <label>
+        Title:
+        <input type="text" [(ngModel)]="editedProduct.title" name="title">
+      </label>
+      <label>
+        Description:
+        <textarea [(ngModel)]="editedProduct.description" name="description"></textarea>
+      </label>
+      <label>
+        Price:
+        <input type="number" [(ngModel)]="editedProduct.price" name="price">
+      </label>
+      <button type="button" (click)="saveProduct()">Save</button>
+      <button type="button" (click)="cancelEdit()">Cancel</button>
+    </form>
+  </div>
+</div>

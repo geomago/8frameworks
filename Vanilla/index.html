@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Product Table</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <h1>Product Table</h1>
+    <table id="product-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Thumbnail</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+
+    <div id="edit-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title"></h2>
+          <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+          <input type="text" placeholder="Title">
+          <input type="text" placeholder="Description">
+          <input type="number" placeholder="Price">
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-button">Cancel</button>
+          <button class="save-button">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
+  </body>
+</html>

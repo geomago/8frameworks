@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Alpine.js Project</title>
+    <style>
+        .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .table img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .modal {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 16px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+        }
+
+        .modal h2 {
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .modal label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .modal input[type="text"],
+        .modal input[type="number"] {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            display: block;
+            font-size: 1rem;
+            padding: 8px;
+            width: 100%;
+        }
+
+        .modal button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 1rem;
+            margin-right: 8px;
+            padding: 8px 16px;
+        }
+
+        .modal button:hover {
+            background-color: #0069d9;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.11.1/dist/cdn.min.js"></script>
+    <script>
+        const apiUrl = 'https://dummyjson.com/products';
+
+        function fetchProducts() {
+            return fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => data.products)
+                .catch(error => {
+                    console.error('Failed to fetch products:', error);
+                    return [];
+                });
+        }
+        Alpine.data('app', () => ({
+            products: [],
+            editProduct: {},
+            async init() {
+                this.products = await fetchProducts();
+            },
+            submitEditForm() {
+                const index = this.products.findIndex(product => product.id === this.editProduct.id);
+                this.products.splice(index, 1, this.editProduct);
+                this.editProduct = null;
+            }
+        }));
+    </script>
+    <div x-data="app()" class="flex h-screen">
+        <h1>Product Table</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Thumbnail</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="product in products" :key="product.id">
+                    <tr>
+                        <td x-text="product.id"></td>
+                        <td x-text="product.title"></td>
+                        <td x-text="product.description"></td>
+                        <td x-text="product.price"></td>
+                        <td><img :src="product.thumbnail" alt="thumbnail"></td>
+                        <td><button @click="editProduct = Object.assign({},product)">Edit</button></td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+
+        <div class="modal-overlay" x-show="editProduct.id" @click.away="editProduct = null">
+            <div class="modal">
+                <h2>Edit Product</h2>
+                <form @submit.prevent="submitEditForm">
+                    <div>
+                        <label for="title">Title</label>
+                        <input x-model="editProduct.title" id="title" type="text" placeholder="Title" required>
+                    </div>
+                    <div>
+                        <label for="description">Description</label>
+                        <input x-model="editProduct.description" id="description" type="text" placeholder="Description"
+                            required>
+                    </div>
+                    <div>
+                        <label for="price">Price</label>
+                        <input x-model="editProduct.price" id="price" type="number" placeholder="Price" min="0"
+                            step="0.01" required>
+                    </div>
+                    <div>
+                        <button type="submit">Save</button>
+                        <button type="button" @click="editProduct = null">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>
